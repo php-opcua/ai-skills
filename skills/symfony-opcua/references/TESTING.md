@@ -267,7 +267,7 @@ it('accepts a minimal config', function () {
 strategy:
   matrix:
     php: ['8.2', '8.3', '8.4']
-    symfony: ['7.3.*', '7.4.*', '8.0.*']
+    symfony: ['7.4.*', '8.0.*']
 ```
 
 For integration: spin up `uanetstandard-test-suite` as a Docker service and gate `--group=integration` behind it.

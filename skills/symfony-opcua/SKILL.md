@@ -1,11 +1,11 @@
 ---
 name: symfony-opcua
-description: Symfony 7.3+ / 8.x bundle for OPC UA. Autowires `OpcuaManager` and `OpcUaClientInterface` via DI, exposes YAML-based named connections, ships an `opcua:session` console command for the session-manager daemon, and dispatches all 56 OPC UA events through Symfony's `EventDispatcherInterface`. Use this skill whenever the user is working with OPC UA from a Symfony application — controllers, Messenger handlers, console commands, scheduled tasks, EasyAdmin / API Platform endpoints, or Pest tests.
+description: Symfony 7.4+ / 8.x bundle for OPC UA. Autowires `OpcuaManager` and `OpcUaClientInterface` via DI, exposes YAML-based named connections, ships an `opcua:session` console command for the session-manager daemon, and dispatches all 56 OPC UA events through Symfony's `EventDispatcherInterface`. Use this skill whenever the user is working with OPC UA from a Symfony application — controllers, Messenger handlers, console commands, scheduled tasks, EasyAdmin / API Platform endpoints, or Pest tests.
 license: MIT
 version: v4.4.0
 compatibility:
   php: ">= 8.2"
-  symfony: "7.3.x | 7.4.x | 8.0+"
+  symfony: "7.4.x | 8.0+"
   depends_on:
     - php-opcua/opcua-client@^4.4.0
     - php-opcua/opcua-session-manager@^4.4.0
