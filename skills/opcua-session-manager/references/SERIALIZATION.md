@@ -79,7 +79,7 @@ Each `ServiceModule` adds its own result DTOs via `registerWireTypes()`:
 
 - ReadWrite: `CallResult`
 - Browse: `BrowseResultSet`
-- Subscription: `SubscriptionResult`, `MonitoredItemResult`, `PublishResult`, `TransferResult`
+- Subscription: `SubscriptionResult`, `MonitoredItemResult`, `PublishResult`, `TransferResult`, `DataChangeNotification`, `EventNotification` (both v4.5.0)
 - TranslateBrowsePath: `BrowsePathResult`, `BrowsePathTarget`
 - NodeManagement: `AddNodesResult`
 - ServerInfo: `BuildInfo`

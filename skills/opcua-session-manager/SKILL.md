@@ -2,14 +2,14 @@
 name: opcua-session-manager
 description: Keep OPC UA sessions alive across PHP requests via a ReactPHP daemon and local IPC (Unix-domain socket on Linux/macOS, TCP loopback on Windows — auto-selected). ManagedClient is a drop-in OpcUaClientInterface replacement for php-opcua/opcua-client's Client — same API surface, persistent sessions, ~150ms handshake overhead paid once instead of every request. Use this skill whenever the user wants to eliminate per-request OPC UA connection cost, run OPC UA from PHP-FPM / Laravel / Symfony web requests, keep subscriptions / monitored items alive between requests, or operate a long-running OPC UA daemon process.
 license: MIT
-compatibility: Requires PHP >= 8.2 with ext-openssl. ext-pcntl recommended for signal-driven shutdown. The daemon needs to run as a long-lived process (systemd / Supervisor / Docker). Lock-step with php-opcua/opcua-client v4.4.0+.
+compatibility: Requires PHP >= 8.2 with ext-openssl. ext-pcntl recommended for signal-driven shutdown. The daemon needs to run as a long-lived process (systemd / Supervisor / Docker). Lock-step with php-opcua/opcua-client v4.5.0+.
 metadata:
   package: php-opcua/opcua-session-manager
-  version: v4.4.0
+  version: v4.5.0
   ecosystem: php-opcua
 ---
 
-# php-opcua/opcua-session-manager — v4.4.0 skill
+# php-opcua/opcua-session-manager — v4.5.0 skill
 
 A ReactPHP daemon that holds OPC UA sessions in memory across short-lived PHP requests. `ManagedClient` is a drop-in `OpcUaClientInterface` replacement that talks to the daemon via local IPC — the application code is **identical** to direct `Client` usage, but the OPC UA handshake (50–200 ms) is paid once at daemon startup, not per request.
 
@@ -166,6 +166,20 @@ $daemon = new SessionManagerDaemon(
 $daemon->run();
 ```
 
+## What v4.5.0 added on top of v4.4
+
+Lock-step with `opcua-client` v4.5.0 — the core's security-hardening release. No new IPC commands; the package plumbs through two core changes that cross the daemon boundary.
+
+- **Typed subscription notifications.** `PublishResult::$notifications` now holds `DataChangeNotification` / `EventNotification` objects instead of `['type' => 'DataChange', …]` arrays. `TypeSerializer` serializes and rebuilds both, so `ManagedClient::publish()` returns real objects with decoded `DataValue` / `Variant` members. **The IPC payload shape is unchanged** (`{type, clientHandle, dataValue|eventFields}`), so version skew works in both directions.
+- **`ManagedClient::verifyApplicationUri(bool)`** — the opt-out for the core's new server-certificate ↔ endpoint `ApplicationUri` binding, which is **on by default**. Travels in the `open` config as `verifyApplicationUri`, lands in `SessionConfig`, applied to that session's `ClientBuilder`.
+- **`EndpointDescription::$applicationUri`** round-trips across IPC.
+- **Composer constraint bumped** from `^4.4.0` to `^4.5.0`
+- **`SessionManagerDaemon::VERSION`** → `4.5.0`
+
+Inherited from the core for free on every daemon session: `serverSignature` verification, ECDH ephemeral-key signature verification, secure-channel header + anti-replay validation, and SHA-256 trust-store content binding.
+
+**Migration:** replace `$n['type'] === 'DataChange'` with `$n instanceof DataChangeNotification` and array offsets with properties (`$n->clientHandle`, `$n->dataValue`, `$n->eventFields`). Auto-publish users need no change — the PSR-14 events are unchanged.
+
 ## What v4.4.0 added on top of v4.3
 
 The package moves in lock-step with `opcua-client` v4.4.0. Every new core method is surfaced as an **explicit typed method** on `ManagedClient` so IDE autocomplete and static analysis see them natively, even though the IPC layer routes them through the generic `invoke` command.
@@ -197,7 +211,7 @@ No IPC protocol change — old clients continue to work against new daemons (and
 
 8. **Custom modules go on the daemon side**, not the client side. Register them when constructing `SessionManagerDaemon` so every session gets them. `ManagedClient::$method(...args)` routes through the generic `invoke` IPC + the registered `ParamDeserializerInterface`. See [`references/CUSTOM-MODULES.md`](references/CUSTOM-MODULES.md).
 
-9. **Lock-step versions**. `php-opcua/opcua-session-manager` v4.4.0 requires `opcua-client` v4.4.0. Don't mix-and-match minor versions.
+9. **Lock-step versions**. `php-opcua/opcua-session-manager` v4.5.0 requires `opcua-client` v4.5.0. Don't mix-and-match minor versions.
 
 ## Common pitfalls (read before generating code)
 

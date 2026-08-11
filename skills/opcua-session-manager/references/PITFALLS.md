@@ -259,8 +259,8 @@ The wire envelope is currently stable across v4.x patches BUT:
 
 ```json
 "require": {
-  "php-opcua/opcua-session-manager": "^4.4",
-  "php-opcua/opcua-client": "^4.4"
+  "php-opcua/opcua-session-manager": "^4.5",
+  "php-opcua/opcua-client": "^4.5"
 }
 ```
 
