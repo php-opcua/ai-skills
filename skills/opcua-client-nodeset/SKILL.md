@@ -2,16 +2,16 @@
 name: opcua-client-nodeset
 description: Drop pre-generated PHP types for 51 OPC Foundation companion specifications (Robotics, MachineTool, DI, Machinery, BACnet, MTConnect, AutoID, ISA-95, PackML, PROFINET, …) into a php-opcua/opcua-client application. One ClientBuilder::loadGeneratedTypes(new RoboticsRegistrar()) call and every read on a structured node returns a typed PHP enum or readonly DTO instead of a raw ExtensionObject. Use this skill whenever an OPC UA task involves a companion specification — typed enums, Structure DataType decoding, well-known NodeId constants, dependency-resolved codec registration, or re-generating PHP from NodeSet2.xml.
 license: MIT
-compatibility: Requires PHP >= 8.2 and php-opcua/opcua-client v4.4+. Pure PHP — no C extensions. The bundled UA-Nodeset/ XML sources are MIT-licensed by the OPC Foundation.
+compatibility: Requires PHP >= 8.2 and php-opcua/opcua-client v4.5+. Pure PHP — no C extensions. The bundled UA-Nodeset/ XML sources are MIT-licensed by the OPC Foundation.
 metadata:
   package: php-opcua/opcua-client-nodeset
-  version: v4.4.0
+  version: v4.5.0
   ecosystem: php-opcua
   generated_files: 807
   specifications: 51
 ---
 
-# php-opcua/opcua-client-nodeset — v4.4.0 skill
+# php-opcua/opcua-client-nodeset — v4.5.0 skill
 
 Pre-generated PHP types for 51 OPC Foundation companion specifications. A read-only library — every file in `src/` is the deterministic output of `composer generate` against `UA-Nodeset/`. Plug it into `opcua-client` with one builder call and structured OPC UA values come back as typed PHP enums and `readonly` DTOs.
 
@@ -145,14 +145,16 @@ foreach (OperationalModeEnumeration::cases() as $case) { /* … */ }
 $dto = new AxisInformation(name: 'X', minValue: 0.0, maxValue: 100.0, unit: …);
 ```
 
-## v4.4.0 alignment
+## v4.5.0 alignment
 
-Lock-step with `php-opcua/opcua-client` v4.4.0:
+Lock-step with `php-opcua/opcua-client` v4.5.0:
 
 - Uses `ClientBuilder::loadGeneratedTypes(GeneratedTypeRegistrar ...)` — added in core v4.4
 - Uses `GeneratedTypeRegistrar` interface from core `PhpOpcua\Client\Repository\`
 - Every generated DTO implements `WireSerializable` so it round-trips through `opcua-session-manager`'s `ManagedClient` and through the PSR-16 cache safely (JSON-gated by `WireTypeRegistry`)
-- Composer constraint: `"php-opcua/opcua-client": "^4.4.0"`
+- Composer constraint: `"php-opcua/opcua-client": "^4.5.0"`
+
+Nothing in core v4.5.0 touches the `Repository\*` / `Encoding\*` surface this package consumes — its security hardening, typed `PublishResult` notifications and `final` wire DTOs are all outside it. The v4.5.0 release of *this* package does ship generated-code changes, but they fix pre-existing defects (registrar dependency references that did not resolve on case-sensitive filesystems, and 25 codecs that could not resolve their enums) — see the CHANGELOG.
 
 ## Idiomatic patterns AI agents should follow
 

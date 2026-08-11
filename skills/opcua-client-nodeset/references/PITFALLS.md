@@ -207,7 +207,7 @@ Every registrar costs codec-registration time at boot (~milliseconds per codec).
 
 If your `composer.json` constrains:
 ```json
-"php-opcua/opcua-client": "^4.4",
+"php-opcua/opcua-client": "^4.5",
 "php-opcua/opcua-client-nodeset": "^4.3"
 ```
 
@@ -215,8 +215,8 @@ Boot may fail: nodeset v4.3 was built against the older `GeneratedTypeRegistrar`
 
 **Right** — pin to the same minor:
 ```json
-"php-opcua/opcua-client": "^4.4",
-"php-opcua/opcua-client-nodeset": "^4.4"
+"php-opcua/opcua-client": "^4.5",
+"php-opcua/opcua-client-nodeset": "^4.5"
 ```
 
 ## 12. Treating the generator as a library
